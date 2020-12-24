@@ -450,16 +450,6 @@ while True:
 
     t = rtc.datetime
 
-    # Detect whether a sensor has been touched and register the corresponding data during waking hours.
-    if True in touch_sensor.touched_pins and (not t.tm_hour >= 1 and t.tm_hour < 8):
-        monitor_sensors()
-        continue
-
-        # If the data has changed in anyway we detect whether the desired time has elapsed
-    if states["timestamp"] and (time.mktime(t) - states["timestamp"] >= 60):
-        write_data()
-        continue
-
     if t.tm_hour >= 1 and t.tm_hour < 8: # 1a to 8a, you should be sleeping
         pyramid_top.fill(OFF)
         pyramid_top.write()
@@ -467,6 +457,16 @@ while True:
         pyramid_bottom.write()
         flower.fill(OFF)
         flower.write()
+        continue
+        
+    # Detect whether a sensor has been touched and register the corresponding data during waking hours.
+    if (True in touch_sensor.touched_pins) and not (t.tm_hour >= 1 and t.tm_hour < 8):
+        monitor_sensors()
+        continue
+
+        # If the data has changed in anyway we detect whether the desired time has elapsed
+    if states["timestamp"] and (time.mktime(t) - states["timestamp"] >= 60):
+        write_data()
         continue
 
     # Change the color of the top pyramid according to the day.
