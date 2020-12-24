@@ -1,4 +1,4 @@
-# CHRIS' MAD CHRISTMAS CLOCK
+# Origami Light Clock
 
 My first electronics build! Inspired by Charlyn's clock https://charlyn.codes/ac-nova-light-clock/
 
