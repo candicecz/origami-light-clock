@@ -13,10 +13,11 @@ myI2C = busio.I2C(board.SCL, board.SDA)
 rtc = adafruit_pcf8523.PCF8523(myI2C)
 touch_sensor = adafruit_mpr121.MPR121(myI2C)
 
-CURRENT_DAY  = None
-CURRENT_HOUR = None
-COLOR_DAY    = None
-COLOR_HOUR   = None
+CURRENT_DAY      = None
+CURRENT_HOLIDAY  = None
+CURRENT_HOUR     = None
+COLOR_DAY        = None
+COLOR_HOUR       = None
 
 # ==================================
 # TOUCH SENSORS
@@ -27,14 +28,15 @@ COLOR_HOUR   = None
 NUM_SENSOR_MAX = 12
 
 # States and their corresponding sensor input index
-ANGER    = 0
+POMODORO = 0
+
 PRESENCE = 1
 SAD      = 2
 TIRED    = 4
-BUILDO   = 5
+ANGER    = 5
 LOVE     = 6
 FEAR     = 8
-POMODORO = 9
+BUILDO   = 9
 
 states = {
     "buildo": 0,
@@ -134,7 +136,7 @@ def update_state_rank(state):
 
     # And fill the flower with the corresponsing state's color.
     flower.fill(get_color_for_state(state, states[state]))
-    flower.show()
+    flower.write()
 
 # Loop forever testing each input and printing when they're touched.
 def monitor_sensors():
@@ -194,10 +196,10 @@ def write_data():
         while True:
         # The flower neopixel will flash red in an error occurs.
             flower.fill(OFF)
-            flower.show()
+            flower.write()
             time.sleep(delay)
             flower.fill(ERROR)
-            flower.show()
+            flower.write()
 
 
 # ==================================
@@ -274,13 +276,13 @@ pyramid_bottom = neopixel.NeoPixel(board.D13, PYRAMID_LEN, pixel_order=neopixel.
 
 # Start with all the lights off
 flower.fill(OFF)
-flower.show()
+flower.write()
 
 pyramid_top.fill(OFF)
-pyramid_top.show()
+pyramid_top.write()
 
 pyramid_bottom.fill(OFF)
-pyramid_bottom.show()
+pyramid_bottom.write()
 
 
 # Sets the colors for each state and increases the brightness based on the chosen rank.
@@ -362,7 +364,7 @@ def color_chase(light_unit, light_len, color, wait):
 
         light_unit[i] = color
         time.sleep(wait)
-        light_unit.show()
+        light_unit.write()
     return None
 
 
@@ -371,17 +373,20 @@ def pick_rando_color():
     rando_color = COLOR_ARRAY[pick]
     return rando_color
 
-# # Cycle through the colors where wait is the time between each pixel lighting up and duration is how long each light should be on for
-# def random_cycle(wait):
-#     color1 = pick_rando_color()
-#     color2 = pick_rando_color()
-#     color3 = pick_rando_color()
-#     if color1 == color2 == color3:
-#         color1 = pick_rando_color()
 
-#     color_chase(pyramid_top, PYRAMID_LEN, color1, wait)
-#     color_chase(pyramid_bottom, PYRAMID_LEN, color2, wait)
-#     color_chase(flower, FLOWER_LEN, color3, wait)
+# ==================================
+#  RESET TIME
+# ==================================
+
+# if False:   # change to True if you want to write the time!
+#     #                     year, mon, date, hour, min, sec, wday, yday, isdst
+#     t = time.struct_time((2020,  11,   28,   19,  20,  30,    6,   -1,    -1))
+#     # you must set year, mon, date, hour, min, sec and weekday
+#     # yearday is not supported, isdst can be set but we don't do anything with it at this time
+
+#     print("Setting time to:", t)     # uncomment for debugging
+#     rtc.datetime = t
+#     print()
 
 # ==================================
 #  RUNNING THE CODE
@@ -450,13 +455,17 @@ while True:
 
     t = rtc.datetime
 
-    if t.tm_hour >= 1 and t.tm_hour < 8: # 1a to 8a, you should be sleeping
+    if t.tm_hour >= 1 and t.tm_hour < 8: # 1a to 8a, you should be sleeping. Reset.
         pyramid_top.fill(OFF)
         pyramid_top.write()
         pyramid_bottom.fill(OFF)
         pyramid_bottom.write()
         flower.fill(OFF)
         flower.write()
+        CURRENT_DAY  = None
+        CURRENT_HOUR = None
+        COLOR_DAY    = None
+        COLOR_HOUR   = None
         continue
         
     # Detect whether a sensor has been touched and register the corresponding data during waking hours.
@@ -464,8 +473,8 @@ while True:
         monitor_sensors()
         continue
 
-        # If the data has changed in anyway we detect whether the desired time has elapsed
-    if states["timestamp"] and (time.mktime(t) - states["timestamp"] >= 60):
+    # If the data has changed in anyway we detect whether the desired time has elapsed
+    if states["timestamp"] and (time.mktime(t) - states["timestamp"] >= 30):
         write_data()
         continue
 
@@ -473,55 +482,61 @@ while True:
     if (t.tm_wday != CURRENT_DAY):
         CURRENT_DAY = t.tm_wday
         COLOR_DAY = get_day_color(t.tm_wday)
+        if (t.tm_mon == 12 and t.tm_mday == 25): # Christmas
+            CURRENT_HOLIDAY = "CHRISTMAS"
+        elif (t.tm_mon == 1 and t.tm_mday == 1): # New Year's Day
+            CURRENT_HOLIDAY = "NEW YEAR"
+        elif (t.tm_mon == 2 and t.tm_mday == 14): # Valentine's Day
+            CURRENT_HOLIDAY = "VALENTINE"
+        elif (t.tm_mon == 5 and t.tm_mday == 18): # Plant Day
+            CURRENT_HOLIDAY = "PLANT"
+        elif (t.tm_mon == 9 and t.tm_mday == 2) or (t.tm_mon == 10 and t.tm_mday == 19) or (t.tm_mon == 10 and t.tm_mday == 22) or (t.tm_mon == 1 and t.tm_mday == 6): # Other significant days
+            CURRENT_HOLIDAY = "OTHER"
+        elif (t.tm_mon == 10 and t.tm_mday == 31): # Halloween Day
+            CURRENT_HOLIDAY = "HALLOWEEN"
+        else:
+            CURRENT_HOLIDAY = None
 
         pyramid_top.fill(COLOR_DAY)
         pyramid_top.write()
+        time.sleep(0.5)
+        continue
 
 
     # Change the color of the bottom pyramid according to the hour.
-    if(t.tm_hour != CURRENT_HOUR):
+    if (t.tm_hour != CURRENT_HOUR):
         CURRENT_HOUR = t.tm_hour
-        COLOR_HOUR = get_hour_color(t.tm_hour)
+        COLOR_HOUR   = get_hour_color(t.tm_hour)
         color_chase(pyramid_bottom, PYRAMID_LEN, COLOR_HOUR, 0.1)
+        time.sleep(0.5)
+        continue
+
 
     # Flower cycles between both day and hour colors  when Pomodoro is not on and the state isn't being set.
     if (COLOR_DAY and COLOR_HOUR) and not POMO_ON and not states["timestamp"]:
         # Different center flower colors for the holiday and special days.
-        if (t.tm_mon == 12 and t.tm_mday == 25): # Christmas
-            breathe(flower, FLOWER_LEN, GREEN, RED, 1)
-        elif (t.tm_mon == 1 and t.tm_mday == 1): # New Year's Day
-            wait = 0.05
-            color_1 = pick_rando_color()
-            color_2 = pick_rando_color()
-            color_chase(flower, FLOWER_LEN, color_1, wait)
-            color_chase(flower, FLOWER_LEN, color_2, wait)
-        elif (t.tm_mon == 2 and t.tm_mday == 14): # Valentine's Day
-            breathe(flower, FLOWER_LEN, PINK, RED, 1)
-        elif (t.tm_mon == 5 and t.tm_mday == 18): # Plant Day
-            breathe(flower, FLOWER_LEN, GREEN, LIGHT_GREEN, 1)
-        elif (t.tm_mon == 9 and t.tm_mday == 2) or (t.tm_mon == 10 and t.tm_mday == 19) or (t.tm_mon == 10 and t.tm_mday == 22): # Other significant days
-            wait = 0.05
-            color_1 = pick_rando_color()
-            color_2 = pick_rando_color()
-            breathe(flower, FLOWER_LEN, color_1, color_2, 1)
-        elif (t.tm_mon == 10 and t.tm_mday == 31): # Halloween Day
-            breathe(flower, FLOWER_LEN, LIGHT_ORANGE, DARK_ORANGE, 1)
+        if CURRENT_HOLIDAY is not None: # Christmas
+            if (CURRENT_HOLIDAY == "CHRISTMAS"):
+                breathe(flower, FLOWER_LEN, GREEN, RED, 1)
+            elif (CURRENT_HOLIDAY == "NEW YEAR"):
+                wait = 0.05
+                color_1 = pick_rando_color()
+                color_2 = pick_rando_color()
+                color_chase(flower, FLOWER_LEN, color_1, wait)
+                color_chase(flower, FLOWER_LEN, color_2, wait)
+            elif (CURRENT_HOLIDAY == "VALENTINE"):
+                breathe(flower, FLOWER_LEN, PINK, RED, 1)
+            elif (CURRENT_HOLIDAY == "PLANT"):
+                breathe(flower, FLOWER_LEN, GREEN, LIGHT_GREEN, 1)
+            elif (CURRENT_HOLIDAY == "OTHER"):   
+                wait = 0.05
+                color_1 = pick_rando_color()
+                color_2 = pick_rando_color()
+                breathe(flower, FLOWER_LEN, color_1, color_2, 1)
+            elif (CURRENT_HOLIDAY == "HALLOWEEN"): # Halloween Day
+                breathe(flower, FLOWER_LEN, LIGHT_ORANGE, DARK_ORANGE, 1)
         else:
             breathe(flower, FLOWER_LEN, COLOR_DAY, COLOR_HOUR, 1)
-
+        continue
 
     time.sleep(0.25)
-
-# ==================================
-#  RESET TIME
-# ==================================
-
-# if False:   # change to True if you want to write the time!
-#     #                     year, mon, date, hour, min, sec, wday, yday, isdst
-#     t = time.struct_time((2020,  11,   28,   19,  20,  30,    6,   -1,    -1))
-#     # you must set year, mon, date, hour, min, sec and weekday
-#     # yearday is not supported, isdst can be set but we don't do anything with it at this time
-
-#     print("Setting time to:", t)     # uncomment for debugging
-#     rtc.datetime = t
-#     print()
