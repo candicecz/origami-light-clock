@@ -1,1 +1,272 @@
-{}
+{
+  "1612028162": {
+    "tired": 2,
+    "timestamp": 1612028162,
+    "anger": 2,
+    "sad": 2,
+    "buildo": 1,
+    "fear": 2,
+    "love": 2,
+    "presence": 2
+  },
+  "1611943907": {
+    "love": 1,
+    "presence": 1,
+    "anger": 1,
+    "timestamp": 1611943907,
+    "buildo": 2,
+    "tired": 4,
+    "fear": 2,
+    "sad": 2
+  },
+  "1611871708": {
+    "fear": 2,
+    "sad": 2,
+    "anger": 1,
+    "tired": 1,
+    "buildo": 3,
+    "love": 2,
+    "presence": 2,
+    "timestamp": 1611871708
+  },
+  "1611790737": {
+    "presence": 2,
+    "timestamp": 1611790737,
+    "anger": 1,
+    "sad": 3,
+    "buildo": 2,
+    "tired": 1,
+    "love": 2,
+    "fear": 2
+  },
+  "1611692439": {
+    "love": 3,
+    "fear": 2,
+    "anger": 1,
+    "timestamp": 1611692439,
+    "buildo": 2,
+    "tired": 1,
+    "presence": 1,
+    "sad": 3
+  },
+  "1611609524": {
+    "presence": 1,
+    "sad": 1,
+    "anger": 1,
+    "tired": 3,
+    "buildo": 2,
+    "fear": 2,
+    "love": 3,
+    "timestamp": 1611609524
+  },
+  "1611527414": {
+    "timestamp": 1611527414,
+    "presence": 1,
+    "tired": 0,
+    "sad": 2,
+    "anger": 1,
+    "fear": 2,
+    "love": 2,
+    "buildo": 1
+  },
+  "1611441014": {
+    "timestamp": 1611441014,
+    "presence": 1,
+    "tired": 0,
+    "sad": 2,
+    "anger": 1,
+    "fear": 2,
+    "love": 2,
+    "buildo": 1
+  },
+  "1611354614": {
+    "timestamp": 1611354614,
+    "presence": 1,
+    "tired": 3,
+    "sad": 3,
+    "anger": 2,
+    "fear": 1,
+    "love": 2,
+    "buildo": 1
+  },
+  "1611268214": {
+    "timestamp": 1611268214,
+    "presence": 2,
+    "tired": 2,
+    "sad": 2,
+    "anger": 1,
+    "fear": 2,
+    "love": 2,
+    "buildo": 1
+  },
+  "1611181814": {
+    "timestamp": 1611181814,
+    "presence": 1,
+    "tired": 2,
+    "sad": 3,
+    "anger": 2,
+    "fear": 2,
+    "love": 2,
+    "buildo": 2
+  },
+  "1611095414": {
+    "timestamp": 1611095414,
+    "presence": 2,
+    "tired": 1,
+    "sad": 3,
+    "anger": 1,
+    "fear": 1,
+    "love": 1,
+    "buildo": 1
+  },
+  "1611009014": {
+    "timestamp": 1611009014,
+    "presence": 2,
+    "tired": 2,
+    "sad": 2,
+    "anger": 2,
+    "fear": 2,
+    "love": 2,
+    "buildo": 2
+  },
+  "1610922614": {
+    "timestamp": 1610922614,
+    "presence": 3,
+    "tired": 2,
+    "sad": 2,
+    "anger": 1,
+    "fear": 2,
+    "love": 2,
+    "buildo": 2
+  },
+  "1610837732": {
+    "tired": 1,
+    "timestamp": 1610837732,
+    "anger": 2,
+    "sad": 2,
+    "buildo": 1,
+    "fear": 2,
+    "love": 1,
+    "presence": 3
+  },
+  "1610665822": {
+    "fear": 2,
+    "sad": 3,
+    "anger": 1,
+    "tired": 3,
+    "buildo": 2,
+    "love": 2,
+    "presence": 2,
+    "timestamp": 1610665822
+  },
+  "1610574400": {
+    "love": 2,
+    "fear": 2,
+    "anger": 1,
+    "timestamp": 1610574400,
+    "buildo": 3,
+    "tired": 2,
+    "presence": 3,
+    "sad": 5
+  },
+  "1610486594": {
+    "presence": 1,
+    "sad": 4,
+    "anger": 1,
+    "tired": 2,
+    "buildo": 1,
+    "fear": 3,
+    "love": 1,
+    "timestamp": 1610486594
+  },
+  "1610399350": {
+    "love": 3,
+    "timestamp": 1610399350,
+    "anger": 2,
+    "tired": 3,
+    "buildo": 2,
+    "fear": 3,
+    "presence": 2,
+    "sad": 3
+  },
+  "1610233472": {
+    "love": 2,
+    "timestamp": 1610233472,
+    "anger": 2,
+    "tired": 2,
+    "buildo": 1,
+    "fear": 2,
+    "presence": 3,
+    "sad": 4
+  },
+  "1610143843": {
+    "presence": 2,
+    "sad": 3,
+    "anger": 2,
+    "tired": 5,
+    "buildo": 1,
+    "love": 1,
+    "fear": 3,
+    "timestamp": 1610143843
+  },
+  "1610049600": {
+    "presence": 2,
+    "sad": 3,
+    "anger": 2,
+    "timestamp": 1610049600,
+    "buildo": 1,
+    "tired": 3,
+    "love": 1,
+    "fear": 3
+  },
+  "1609971060": {
+    "presence": 2,
+    "sad": 3,
+    "anger": 1,
+    "timestamp": 1609971060,
+    "buildo": 2,
+    "tired": 3,
+    "love": 1,
+    "fear": 2
+  },
+  "1609790400": {
+    "presence": 3,
+    "sad": 2,
+    "anger": 2,
+    "timestamp": 1609790400,
+    "buildo": 2,
+    "tired": 0,
+    "love": 1,
+    "fear": 2
+  },
+  "1609704000": {
+    "presence": 2,
+    "sad": 4,
+    "anger": 1,
+    "timestamp": 1609704000,
+    "buildo": 1,
+    "tired": 0,
+    "love": 2,
+    "fear": 3
+  },
+  "1609617600": {
+    "presence": 2,
+    "sad": 3,
+    "anger": 1,
+    "timestamp": 1609617600,
+    "buildo": 1,
+    "tired": 0,
+    "love": 2,
+    "fear": 1
+  },
+  "1609531200": {
+    "presence": 2,
+    "sad": 3,
+    "anger": 2,
+    "timestamp": 1609531200,
+    "buildo": 2,
+    "tired": 0,
+    "love": 2,
+    "fear": 2
+  }
+}
