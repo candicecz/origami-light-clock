@@ -378,19 +378,20 @@ def pick_rando_color():
 #  RESET TIME
 # ==================================
 
-# if False:   # change to True if you want to write the time!
-#     #                     year, mon, date, hour, min, sec, wday, yday, isdst
-#     t = time.struct_time((2020,  11,   28,   19,  20,  30,    6,   -1,    -1))
-#     # you must set year, mon, date, hour, min, sec and weekday
-#     # yearday is not supported, isdst can be set but we don't do anything with it at this time
+#if False:   # change to True if you want to write the time!
+    #                     year, mon, date, hour, min, sec, wday, yday, isdst
+#    t = time.struct_time((2021,  1,   24,   11,  50,  45,    0,   -1,    -1))
+    # you must set year, mon, date, hour, min, sec and weekday
+    # yearday is not supported, isdst can be set but we don't do anything with it at this time
 
-#     print("Setting time to:", t)     # uncomment for debugging
-#     rtc.datetime = t
-#     print()
+#    print("Setting time to:", t)     # uncomment for debugging
+#    rtc.datetime = t
+#    print()
 
 # ==================================
 #  RUNNING THE CODE
 # ==================================
+
 
 # Returns a color based on the hour of the day
 def get_hour_color(hour):
@@ -444,7 +445,7 @@ def get_day_color(day):
     elif day == 3:
         return LILAC
     elif day == 4:
-        return LIGHTEST_GREEN
+        return DARK_GREEN
     elif day == 5:
         return LIGHT_VIOLET
     elif day == 6:
@@ -455,19 +456,20 @@ while True:
 
     t = rtc.datetime
 
-    if t.tm_hour >= 1 and t.tm_hour < 8: # 1a to 8a, you should be sleeping. Reset.
+    if t.tm_hour >= 0 and t.tm_hour < 8: # 12a to 8a, you should be sleeping. Reset.
         pyramid_top.fill(OFF)
         pyramid_top.write()
         pyramid_bottom.fill(OFF)
         pyramid_bottom.write()
         flower.fill(OFF)
         flower.write()
-        CURRENT_DAY  = None
-        CURRENT_HOUR = None
-        COLOR_DAY    = None
-        COLOR_HOUR   = None
+        CURRENT_HOLIDAY = None
+        CURRENT_DAY     = None
+        CURRENT_HOUR    = None
+        COLOR_DAY       = None
+        COLOR_HOUR      = None
         continue
-        
+
     # Detect whether a sensor has been touched and register the corresponding data during waking hours.
     if (True in touch_sensor.touched_pins) and not (t.tm_hour >= 1 and t.tm_hour < 8):
         monitor_sensors()
@@ -480,8 +482,7 @@ while True:
 
     # Change the color of the top pyramid according to the day.
     if (t.tm_wday != CURRENT_DAY):
-        CURRENT_DAY = t.tm_wday
-        COLOR_DAY = get_day_color(t.tm_wday)
+
         if (t.tm_mon == 12 and t.tm_mday == 25): # Christmas
             CURRENT_HOLIDAY = "CHRISTMAS"
         elif (t.tm_mon == 1 and t.tm_mday == 1): # New Year's Day
@@ -490,16 +491,19 @@ while True:
             CURRENT_HOLIDAY = "VALENTINE"
         elif (t.tm_mon == 5 and t.tm_mday == 18): # Plant Day
             CURRENT_HOLIDAY = "PLANT"
-        elif (t.tm_mon == 9 and t.tm_mday == 2) or (t.tm_mon == 10 and t.tm_mday == 19) or (t.tm_mon == 10 and t.tm_mday == 22) or (t.tm_mon == 1 and t.tm_mday == 6): # Other significant days
+        elif (t.tm_mon == 9 and t.tm_mday == 2) or (t.tm_mon == 10 and t.tm_mday == 19) or (t.tm_mon == 10 and t.tm_mday == 22): # Other significant days
             CURRENT_HOLIDAY = "OTHER"
         elif (t.tm_mon == 10 and t.tm_mday == 31): # Halloween Day
             CURRENT_HOLIDAY = "HALLOWEEN"
         else:
             CURRENT_HOLIDAY = None
 
+        CURRENT_DAY = t.tm_wday % 7
+        COLOR_DAY = get_day_color(t.tm_wday % 7)
+
         pyramid_top.fill(COLOR_DAY)
         pyramid_top.write()
-        time.sleep(0.5)
+        time.sleep(1)
         continue
 
 
@@ -508,7 +512,7 @@ while True:
         CURRENT_HOUR = t.tm_hour
         COLOR_HOUR   = get_hour_color(t.tm_hour)
         color_chase(pyramid_bottom, PYRAMID_LEN, COLOR_HOUR, 0.1)
-        time.sleep(0.5)
+        time.sleep(1)
         continue
 
 
@@ -517,7 +521,7 @@ while True:
         # Different center flower colors for the holiday and special days.
         if CURRENT_HOLIDAY is not None: # Christmas
             if (CURRENT_HOLIDAY == "CHRISTMAS"):
-                breathe(flower, FLOWER_LEN, GREEN, RED, 1)
+                breathe(flower, FLOWER_LEN, GREEN, RED, 2)
             elif (CURRENT_HOLIDAY == "NEW YEAR"):
                 wait = 0.05
                 color_1 = pick_rando_color()
@@ -525,18 +529,20 @@ while True:
                 color_chase(flower, FLOWER_LEN, color_1, wait)
                 color_chase(flower, FLOWER_LEN, color_2, wait)
             elif (CURRENT_HOLIDAY == "VALENTINE"):
-                breathe(flower, FLOWER_LEN, PINK, RED, 1)
+                breathe(flower, FLOWER_LEN, PINK, RED, 2)
             elif (CURRENT_HOLIDAY == "PLANT"):
-                breathe(flower, FLOWER_LEN, GREEN, LIGHT_GREEN, 1)
-            elif (CURRENT_HOLIDAY == "OTHER"):   
+                breathe(flower, FLOWER_LEN, GREEN, LIGHT_GREEN, 2)
+            elif (CURRENT_HOLIDAY == "OTHER"):
                 wait = 0.05
                 color_1 = pick_rando_color()
                 color_2 = pick_rando_color()
-                breathe(flower, FLOWER_LEN, color_1, color_2, 1)
+                breathe(flower, FLOWER_LEN, color_1, color_2, 2)
             elif (CURRENT_HOLIDAY == "HALLOWEEN"): # Halloween Day
-                breathe(flower, FLOWER_LEN, LIGHT_ORANGE, DARK_ORANGE, 1)
+                breathe(flower, FLOWER_LEN, LIGHT_ORANGE, DARK_ORANGE, 2)
+
         else:
-            breathe(flower, FLOWER_LEN, COLOR_DAY, COLOR_HOUR, 1)
+            breathe(flower, FLOWER_LEN, COLOR_DAY, COLOR_HOUR, 2)
+
         continue
 
-    time.sleep(0.25)
+    time.sleep(1)
